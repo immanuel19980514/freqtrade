@@ -25,6 +25,7 @@ from freqtrade.rpc.api_server.api_schemas import (
     OpenTradeSchema,
     PairCandlesRequest,
     PairHistory,
+    PairTa,
     PerformanceEntry,
     Profit,
     ProfitAll,
@@ -345,6 +346,9 @@ def reload_config(rpc: RPC = Depends(get_rpc)):
 def pair_candles(pair: str, timeframe: str, limit: int | None = None, rpc: RPC = Depends(get_rpc)):
     return rpc._rpc_analysed_dataframe(pair, timeframe, limit, None)
 
+@router.get("/pair_ta", response_model=PairTa, tags=["Candle data"])
+def pair_ta(pair: str, timeframe: str, limit: int | None = None, rpc: RPC = Depends(get_rpc)):
+    return rpc._rpc_analysed_dataframe_ta(pair, timeframe, limit, None)
 
 @router.post("/pair_candles", response_model=PairHistory, tags=["Candle data"])
 def pair_candles_filtered(payload: PairCandlesRequest, rpc: RPC = Depends(get_rpc)):

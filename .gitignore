@@ -1,10 +1,11 @@
 # Freqtrade rules
-config*.json
+#config*.json
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
 logfile.txt
-user_data/*
+user_data/data/*
+user_data/logs/*
 !user_data/strategy/sample_strategy.py
 !user_data/notebooks
 !user_data/models

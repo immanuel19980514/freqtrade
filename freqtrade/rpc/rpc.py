@@ -1607,6 +1607,142 @@ class RPC:
             annotations,
         )
 
+    def _rpc_analysed_dataframe_ta_drawing_path(self, dataframe: DataFrame) -> dict[str, Any]:
+        points = []
+        for _, row in dataframe.iterrows():
+            date = row["date"]
+            open_ = row["open"]
+            high = row["high"]
+            low = row["low"]
+            close = row["close"]
+            volume = row["volume"]
+
+            #ndex(['ZIGZAGs_5%_10', 'ZIGZAGv_5%_10', 'ZIGZAGd_5%_10'], 
+            zigzag_high = row["zigzag_high"] 
+            zigzag_low = row["zigzag_low"]
+            zigzag_dir = row["zigzag_dir"]
+            zigzag_pivot = row["zigzag_pivot"]
+            zigzag_high_ffill = row["zigzag_high_ffill"]
+            zigzag_low_ffill = row["zigzag_low_ffill"]
+
+            print(
+                date,
+                open_,
+                high,
+                low,
+                close,
+                volume,
+                zigzag_high,
+                zigzag_low,
+                zigzag_dir,
+                zigzag_pivot,
+                zigzag_high_ffill,
+                zigzag_low_ffill,
+            )
+
+            # 判断 zigzag_high 或 zigzag_low 是否不是 nan
+            # isnan() 返回 True 表示是 nan，not isnan() 表示不是 nan
+            if not isnan(zigzag_high) or not isnan(zigzag_low):
+                point_data = {
+                    "time": int(date.timestamp()),
+                    "price": float(zigzag_high if not isnan(zigzag_high) else zigzag_low),
+                }
+                points.append(point_data)
+     
+        # # 获取三个 ZigZag 相关列
+        # zigzags_col = [c for c in dataframe.columns if c.startswith("ZIGZAGs")][0] #方向
+        # zigzagv_col = [c for c in dataframe.columns if c.startswith("ZIGZAGv")][0] #值
+        # zigzagd_col = [c for c in dataframe.columns if c.startswith("ZIGZAGd")][0] #回调幅度
+
+        # # 获取所有非 NaN 的时间戳索引
+        # valid_indices = dataframe[zigzags_col].dropna().index
+
+        # # 构建包含多个列数据的 points
+        # points = []
+        # for ts in valid_indices:
+        #     point_data = {
+        #         "time": int(dataframe.loc[ts, "date"].timestamp()),
+        #         "price": float(dataframe.loc[ts, zigzagv_col]),
+        #     }
+        #     points.append(point_data)
+
+
+        res_path = {
+                "id": "drawing_1779265933222_pb1b40ng8",
+                "type": "path",
+                "points": points,
+                "options": {
+                    "lineColor": "#ffffff",
+                    "lineWidth": 1,
+                    "lineStyle": "dashed",
+                    "fillColor": "#2962FF",
+                    "fillOpacity": 0.2,
+                    "textColor": "#D1D4DC",
+                    "fontSize": 12,
+                    "fontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+                    "fontWeight": "normal",
+                    "fontStyle": "normal",
+                    "editable": True,
+                    "removable": True,
+                    "visible": True,
+                    "zIndex": 0
+                },
+                "state": "complete",
+                "createdAt": 1779265933222,
+                "updatedAt": 1779265933222
+                }
+
+        return res_path
+
+    def _rpc_analysed_dataframe_ta_drawing_horizontal_line(self, dataframe: DataFrame) -> dict[str, Any]:
+        res_horizontal_line = {
+                "id": "drawing_1778053027529_6hkui96zl",
+                "type": "horizontal-line",
+                "points": [
+                    {
+                    "time": 1700000000,
+                    "price": 77500
+                    }
+                ],
+                "options": {
+                    "lineColor": "#ef5350",
+                    "lineWidth": 1,
+                    "lineStyle": "solid",
+                    "visible": True,
+                    "editable": True,
+                    "removable": True,
+                    "zIndex": 0
+                },
+                "state": "complete",
+                "createdAt": 1778053083252,
+                "updatedAt": 1778053083252
+                }
+        return res_horizontal_line
+
+    def _rpc_analysed_dataframe_ta(
+        self, pair: str, timeframe: str, limit: int | None, selected_cols: list[str] | None
+    ) -> dict[str, Any]:
+        """Analyzed dataframe in Dict form"""
+
+        _data, last_analyzed = self.__rpc_analysed_dataframe_raw(pair, timeframe, limit)
+
+        res_path = self._rpc_analysed_dataframe_ta_drawing_path(_data)
+
+        res_horizontal_line = self._rpc_analysed_dataframe_ta_drawing_horizontal_line(_data)
+        
+        #todo: 将_data结果转为符合PairTa格式的dict
+        res = {
+            "version": "2.0",
+            "chartId": "0",
+            "drawings": [
+                res_path,
+                res_horizontal_line,                
+            ],
+            "timestamp": 1778053083252
+            }
+
+        return res
+
     def __rpc_analysed_dataframe_raw(
         self, pair: str, timeframe: str, limit: int | None
     ) -> tuple[DataFrame, datetime]:

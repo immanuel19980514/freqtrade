@@ -73,6 +73,66 @@ class Balance(BaseModel):
     position: float
     is_bot_managed: bool
 
+class MacroCalendarEvent(BaseModel):
+    date: str
+    time: str
+    country: str
+    event: str
+    event_name: str
+    event_source: str
+    importance: int
+    actual: str
+    forecast: str
+    previous: str
+    link: str
+    impact: str
+
+class MacroCalendar(BaseModel):
+    events: list[MacroCalendarEvent]
+    date: str
+    total: int
+
+
+class NewsFlashEvent(BaseModel):
+    """新闻快讯事件模型"""
+    title: str
+    content: str
+    date: str
+    time: str
+    link: str
+    source: str
+
+
+class NewsFlashResponse(BaseModel):
+    """新闻快讯响应模型"""
+    news: list[NewsFlashEvent]
+    hour_key: str
+    total: int
+
+
+class SankeyNode(BaseModel):
+    """桑基图节点模型"""
+    name: str
+    category: str
+    country: str
+    description: str
+    itemStyle: dict[str, Any]
+
+
+class SankeyLink(BaseModel):
+    """桑基图链接模型"""
+    source: str
+    target: str
+    value: int
+    description: str
+    lineStyle: dict[str, Any]
+
+
+class MarketFactorResponse(BaseModel):
+    """市场因素桑基图响应模型"""
+    nodes: list[SankeyNode]
+    links: list[SankeyLink]
+
 
 class Balances(BaseModel):
     currencies: list[Balance]
@@ -804,3 +864,35 @@ class CustomDataEntry(BaseModel):
 class ListCustomData(BaseModel):
     trade_id: int
     custom_data: list[CustomDataEntry]
+
+
+class PairTaDrawingPoint(BaseModel):
+    time: int
+    price: float
+
+
+
+class PairTaOption(BaseModel):
+    lineColor: str
+    lineWidth: int
+    lineStyle: str
+    visible: bool
+    editable: bool
+    removable: bool
+    zIndex: int
+
+class PairTaDrawing(BaseModel):
+    id: str
+    type: str
+    points: list[PairTaDrawingPoint]
+    options: PairTaOption
+    state: str
+    createdAt: int
+    updatedAt: int
+
+class PairTa(BaseModel):
+    version: str
+    chartId: str
+    drawings: list[PairTaDrawing]
+    timestamp: int
+    
