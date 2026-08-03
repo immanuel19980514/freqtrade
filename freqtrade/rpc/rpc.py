@@ -1726,7 +1726,7 @@ class RPC:
 
         _data, last_analyzed = self.__rpc_analysed_dataframe_raw(pair, timeframe, limit)
 
-        res_path = self._rpc_analysed_dataframe_ta_drawing_path(_data)
+        #res_path = self._rpc_analysed_dataframe_ta_drawing_path(_data)
 
         res_horizontal_line = self._rpc_analysed_dataframe_ta_drawing_horizontal_line(_data)
         
@@ -1735,7 +1735,7 @@ class RPC:
             "version": "2.0",
             "chartId": "0",
             "drawings": [
-                res_path,
+                #res_path,
                 res_horizontal_line,                
             ],
             "timestamp": 1778053083252

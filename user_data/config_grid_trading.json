@@ -129,15 +129,6 @@
         "sleep_time": 10,
         "message_size_limit": 8
     },
-    "frequi": {
-        "enabled": true,
-        "username": "freqtrader",
-        "password": "freqtrader",
-        "server_ip": "127.0.0.1",
-        "server_port": 8080,
-        "web_dir": "./frequi",
-        "listen_ip_addresses": ["127.0.0.1"]
-    },
     "bot_name": "freqtrade",
     "initial_state": "running",
     "force_entry_enable": false,
